@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Validate Category
-    if ($values['category'] === '') {
+    if ($values['category'] === '') { // Make sure it isn't empty
         $errors['category'] = 'Please select a category.';
-    } elseif (!in_array($values['category'], allowedCategories(), true)) {
+    } elseif (!in_array($values['category'], allowedCategories(), true)) { // Server-side validation to ensure submitted category is allowed
         $errors['category'] = 'Invalid category selected.';
     }
 
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Check if file already exists in directory
             if (!$uploadErrorTriggered && file_exists($target_file)) {
-                $errors['attachment'] = "Sorry, file already exists.";
+                $errors['attachment'] = "Sorry, file already exists. Please change the file's name and try again.";
                 $uploadErrorTriggered = true;
             }
 
@@ -146,7 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          */
 
         if (saveTickets($tickets)) {
-            header('Location: index.php');
+            // Move to index.php and exit
+            header('Location: index.php'); 
             exit;
         } else {
             $errors['global'] = 'Failed to write the ticket to storage';

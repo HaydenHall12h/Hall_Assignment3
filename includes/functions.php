@@ -82,7 +82,7 @@ function nextTicketId(array $tickets): int
     // Extracts all 'id' values from the multi-dimensional array
     $ids = array_column($tickets, 'id');
 
-    // Returns the highest ID incremented by 1
+    // Returns the highest ID + 1
     return max($ids) + 1;
 
     return 0;
@@ -106,32 +106,34 @@ function filterTickets(
      * - search at least name, email, and description
      */
     return array_filter($tickets, function ($ticket) use ($query, $status, $category) {
-        // 1. Status Filter (Exact Match)
+        // Check if status filter was selected. If ticket doesn't match, return false
         if ($status !== '' && ($ticket['status'] ?? '') !== $status) {
             return false;
         }
 
-        // 2. Category Filter (Exact Match)
+        // Same logic as status
         if ($category !== '' && ($ticket['category'] ?? '') !== $category) {
             return false;
         }
 
-        // Keyword Search using stripos to be case insensitive
+        // First check to make sure a query was entered in the search box
         if ($query !== '') {
+            // Keyword Search using stripos to be case insensitive
+            // Each line has a boolean checking if the query matches name/email/description respectively
             $nameMatch        = stripos($ticket['name'] ?? '', $query) !== false;
             $emailMatch       = stripos($ticket['email'] ?? '', $query) !== false;
             $descriptionMatch = stripos($ticket['description'] ?? '', $query) !== false;
 
-            // If the query isn't found in any of the fields, don't show it
+            // If none of the above booleans are true, return false. Meaning ticket doesn't match
             if (!$nameMatch && !$emailMatch && !$descriptionMatch) {
                 return false;
             }
         }
 
-        // Ticket passed all active filters
+        // Ticket passed all active filters, and will be returned
         return true;
     });
-    return $tickets;
+    // return $tickets; originally return from before I implemented the logic
 }
 
 function updateTicketStatus(array &$tickets, int $id, string $newStatus): bool
@@ -142,9 +144,10 @@ function updateTicketStatus(array &$tickets, int $id, string $newStatus): bool
      * Return true if a ticket was updated, otherwise false.
      */
     foreach ($tickets as &$ticket) {
+        // Check if the id matches with the id in server storage. If not, we use ?? null to prevent any errors
         if (($ticket['id'] ?? null) === $id) {
             $ticket['status'] = $newStatus;
-            return true; // Stop execution and return true immediately on match
+            return true; // Stop execution
         }
     }
 

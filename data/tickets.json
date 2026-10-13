@@ -5,7 +5,7 @@
         "email": "jordan.lee@example.com",
         "category": "technical",
         "description": "The dashboard does not load after I sign in.",
-        "status": "Open",
+        "status": "Resolved",
         "attachment": null
     },
     {
@@ -14,7 +14,7 @@
         "email": "maya.patel@example.com",
         "category": "billing",
         "description": "I was charged twice for the same service.",
-        "status": "In Progress",
+        "status": "Resolved",
         "attachment": null
     },
     {
